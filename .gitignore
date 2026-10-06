@@ -5,3 +5,10 @@ dist/
 .env.*
 !.env.example
 *.log
+
+/src/generated/prisma
+
+.agents
+.claude
+.windsurf
+

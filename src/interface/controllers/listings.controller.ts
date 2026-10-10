@@ -1,12 +1,18 @@
 import { type Request, type Response } from 'express';
-import type { Listing } from '../../domain/models/Listing.ts'; // Importa tu interfaz o modelo
+import type { FilterListingsDTO, Listing } from '../../domain/models/Listing.ts';
+import { GetActiveListingsUseCase } from '../../application/listings.use-case.ts';
+import { ListingsPostgresRepository } from '../../infrastructure/repository/listings.pg.repository.ts';
 
+const listingsRepository = new ListingsPostgresRepository();
+const getActiveListingsUseCase = new GetActiveListingsUseCase(listingsRepository);
 
 // GET /api/listings - Obtener todos los alojamientos
 export const getListings = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Aquí consultarías tu base de datos (ej: MongoDB, MySQL, PostgreSQL)
-    res.status(200).json({ success: true, data: [] });
+    const filters: FilterListingsDTO = {};
+    const result = await getActiveListingsUseCase.execute(filters);
+
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al obtener los alojamientos', error });
   }
